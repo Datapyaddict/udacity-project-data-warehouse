@@ -44,7 +44,9 @@ def main():
                             .format(ENDPOINT,DB_NAME,DB_USER,DB_PASSWORD,DB_PORT))
     cur = conn.cursor()
 
+    print("drop tables") 
     drop_tables(cur, conn)
+    print("create tables")     
     create_tables(cur, conn)
 
     conn.close()

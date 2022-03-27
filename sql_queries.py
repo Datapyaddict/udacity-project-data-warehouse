@@ -50,21 +50,21 @@ CREATE TABLE IF NOT EXISTS staging_events (
 )
 
 
+
 staging_songs_table_create = ("""
-CREATE TABLE IF NOT EXISTS staging_songs 
-    (num_songs INT,
+CREATE TABLE IF NOT EXISTS staging_songs (
     artist_id VARCHAR,
     artist_latitude FLOAT,
-    artist_longitude FLOAT,
     artist_location VARCHAR,
+    artist_longitude FLOAT,
     artist_name VARCHAR,
+    duration FLOAT,
+    num_songs INT,
     song_id VARCHAR,
     title VARCHAR,
-    duration FLOAT,
     year INT
     )
 """)
-
 
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS users
@@ -137,23 +137,25 @@ CREATE TABLE IF NOT EXISTS songplay
 """)
 
 
-# STAGING TABLES
+
 
 staging_events_copy = ("""
     COPY staging_events
     FROM {s3_bucket}
     CREDENTIALS 'aws_iam_role={arn}'
-    REGION '{region}'
+    COMPUPDATE OFF REGION '{region}'
     FORMAT  JSON {json_path}
     TIMEFORMAT  'epochmillisecs'
+    TRUNCATECOLUMNS BLANKSASNULL EMPTYASNULL;    
 """).format(s3_bucket=LOG_DATA, arn=ROLE_ARN, region=REGION,json_path=LOG_JSONPATH)
 
 staging_songs_copy = ("""
     COPY staging_songs
     FROM {s3_bucket}
     CREDENTIALS 'aws_iam_role={arn}'
-    REGION  '{region}'
+    COMPUPDATE OFF REGION  '{region}'
     FORMAT  JSON 'auto'
+    TRUNCATECOLUMNS BLANKSASNULL EMPTYASNULL;
 """).format(s3_bucket=SONG_DATA, arn=ROLE_ARN, region=REGION)
 
 # FINAL TABLES
