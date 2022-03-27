@@ -140,7 +140,8 @@ Mapping rules from JSON files to the tables:
 | column | source file.field  |
 |:--------------|:-------------|
 | start_time | *log_file.ts* |
-The other info from the `time` table are derive
+
+The other info from the `time` table are derived
 from the start_time column.
 
 
